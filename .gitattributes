@@ -1,0 +1,13 @@
+*.pbxproj -text
+android/libs/commonlib.aar filter=lfs diff=lfs merge=lfs -text
+android/libs/mobilertc.aar filter=lfs diff=lfs merge=lfs -text
+ios/lib/prod filter=lfs diff=lfs merge=lfs -text
+ios/lib/MobileRTCResources.bundle filter=lfs diff=lfs merge=lfs -text
+ios/lib/dev filter=lfs diff=lfs merge=lfs -text
+ios/lib/dev/* filter=lfs diff=lfs merge=lfs -text
+ios/lib-dev filter=lfs diff=lfs merge=lfs -text
+ios/lib/dev/MobileRTC.framework/ filter=lfs diff=lfs merge=lfs -text
+ios/lib/dev/MobileRTC.framework/MobileRTC filter=lfs diff=lfs merge=lfs -text
+ios/lib/prod/MobileRTC.framework/MobileRTC filter=lfs diff=lfs merge=lfs -text
+ios/lib/prod/* filter=lfs diff=lfs merge=lfs -text
+
