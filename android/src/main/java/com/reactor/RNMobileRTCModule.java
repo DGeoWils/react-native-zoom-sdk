@@ -19,7 +19,7 @@ import com.facebook.react.bridge.ReadableType;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.common.MapBuilder;
 import us.zoom.sdk.JoinMeetingOptions;
-import us.zoom.sdk.StartMeetingOptions;
+import us.zoom.sdk.StartMeetingParams;
 import us.zoom.sdk.MeetingError;
 import us.zoom.sdk.MeetingStatus;
 import us.zoom.sdk.MeetingOptions;
@@ -29,6 +29,7 @@ import us.zoom.sdk.MeetingStatus;
 import us.zoom.sdk.ZoomError;
 import us.zoom.sdk.ZoomSDK;
 import us.zoom.sdk.ZoomSDKInitializeListener;
+import us.zoom.sdk.JoinMeetingParams;
 
 import java.util.Map;
 
@@ -106,12 +107,17 @@ public class RNMobileRTCModule extends ReactContextBaseJavaModule implements Mee
 
 		mPromise = promise;
 
+	    JoinMeetingParams params = new JoinMeetingParams();
+	    params.meetingNo = meetingNo;
+	    params.password = meetingPassword;
+	    params.displayName = userName;
+
 		JoinMeetingOptions opts = new JoinMeetingOptions();
 		opts.no_dial_in_via_phone = true;
 		opts.no_disconnect_audio = true;
 		opts.no_driving_mode = true;
 
-		int ret = meetingService.joinMeeting(this.getCurrentActivity(), meetingNo, userName, meetingPassword, opts);
+		int ret = meetingService.joinMeetingWithParams(this.getCurrentActivity(), params, opts);
 	}
 
   @ReactMethod
@@ -173,8 +179,12 @@ public class RNMobileRTCModule extends ReactContextBaseJavaModule implements Mee
 
 		mPromise = promise;
 
-		StartMeetingOptions opts = new StartMeetingOptions();
-		int ret = meetingService.startMeeting(this.getCurrentActivity(), userName, userToken, userType, meetingNo, userName, opts);
+		StartMeetingParams params = new StartMeetingParams();
+		params.meetingNo = meetingNo;
+
+	  	MeetingOptions opts = new MeetingOptions();
+
+	  	int ret = meetingService.startMeetingWithParams(this.getCurrentActivity(), params, opts);
 	}
 
 	@Override
@@ -243,6 +253,11 @@ public class RNMobileRTCModule extends ReactContextBaseJavaModule implements Mee
 				"SSO_USER", MeetingService.USER_TYPE_SSO
 			)
 		);
+  }
+
+  @Override
+  public void onZoomAuthIdentityExpired() {
+
   }
 
   // Listeners
