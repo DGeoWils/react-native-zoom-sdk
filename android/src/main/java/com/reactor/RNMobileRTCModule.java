@@ -19,6 +19,7 @@ import com.facebook.react.bridge.ReadableType;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.common.MapBuilder;
 import us.zoom.sdk.JoinMeetingOptions;
+import us.zoom.sdk.StartMeetingOptions;
 import us.zoom.sdk.StartMeetingParams;
 import us.zoom.sdk.MeetingError;
 import us.zoom.sdk.MeetingStatus;
@@ -182,7 +183,7 @@ public class RNMobileRTCModule extends ReactContextBaseJavaModule implements Mee
 		StartMeetingParams params = new StartMeetingParams();
 		params.meetingNo = meetingNo;
 
-	  	MeetingOptions opts = new MeetingOptions();
+	  	StartMeetingOptions opts = new StartMeetingOptions();
 
 	  	int ret = meetingService.startMeetingWithParams(this.getCurrentActivity(), params, opts);
 	}
@@ -269,11 +270,6 @@ public class RNMobileRTCModule extends ReactContextBaseJavaModule implements Mee
       startMeetingService();
       mPromise.resolve("Success!");
     }
-  }
-
-  @Override
-  public void onZoomAuthIdentityExpired() {
-    return;
   }
 
   @Override
