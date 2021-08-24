@@ -31,35 +31,55 @@ RCT_EXPORT_MODULE()
 
 RCT_EXPORT_METHOD(initialize:(NSString *)key secret:(NSString *)secret domain:(NSString *) domain resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
-    [[MobileRTC sharedRTC] setMobileRTCDomain:domain];
     clientKey = key;
     clientSecret = secret;
     _initResolver = resolve;
     _initRejecter = reject;
+    
+    MobileRTCSDKInitContext *context = [[MobileRTCSDKInitContext alloc] init];
+    context.domain = domain;
+    context.enableLog = YES;
+    context.locale = MobileRTC_ZoomLocale_Default;
+    
+    BOOL initializeSuc = [[MobileRTC sharedRTC] initialize:context];
+    
+    NSLog(@"MobileRTC initialize======>%@",initializeSuc ? @"success" : @"Fail");
+    NSLog(@"MobileRTC Version: %@", [[MobileRTC sharedRTC] mobileRTCVersion]);
+    
     [self sdkAuth];
 }
 
 RCT_EXPORT_METHOD(startMeeting:(NSDictionary *) options resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
-    MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
-    if (ms){
-        ms.delegate = self;
 
-        NSDictionary *paramDict = @{
-                                    kMeetingParam_UserID:options[@"userId"],
-                                    kMeetingParam_UserToken:options[@"userToken"],
-                                    kMeetingParam_UserType:options[@"userType"],
-                                    kMeetingParam_Username:options[@"userName"],
-                                    kMeetingParam_MeetingNumber:options[@"meetNumber"],
-                                    kMeetingParam_IsAppShare:options[@"appShare"],
-                                    kMeetingParam_ParticipantID:options[@"participantId"],
-                                    };
+    // Does not support starting meetings at this time
 
-        MobileRTCMeetError ret = [ms startMeetingWithDictionary:paramDict];
-        NSLog(@"onMeetNow ret:%d", ret);
+//    MobileRTCMeetingService *ms = [[MobileRTC sharedRTC] getMeetingService];
+//    if (ms){
+//        ms.delegate = self;
+////        MobileRTCMeetingStartParam * startParam = nil;
+//        MobileRTCMeetingStartParam4WithoutLoginUser * startParam = [[MobileRTCMeetingStartParam4WithoutLoginUser alloc] init];
+//        startParam.userType = options[@"userType"];
+//        startParam.userToken =zak options[@"userToken"];
+//        startParam.userName = options[@"userName"];
+//
+//
+//        NSDictionary *paramDict = @{
+//                                    kMeetingParam_UserID:options[@"userId"],
+//                                    kMeetingParam_UserToken:options[@"userToken"],
+//                                    kMeetingParam_UserType:options[@"userType"],
+//                                    kMeetingParam_Username:options[@"userName"],
+//                                    kMeetingParam_MeetingNumber:options[@"meetNumber"],
+//                                    kMeetingParam_IsAppShare:options[@"appShare"],
+//                                    kMeetingParam_ParticipantID:options[@"participantId"],
+//                                    };
+//
+//
+//        MobileRTCMeetError ret = [ms startMeetingWithStartParam:startParam];
+//        NSLog(@"onMeetNow ret:%d", ret);
         _meetingResolver = resolve;
         _meetingRejecter = reject;
-    }
+//    }
 }
 
 RCT_EXPORT_METHOD(joinMeeting:(NSDictionary *) options resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
@@ -74,14 +94,22 @@ RCT_EXPORT_METHOD(joinMeeting:(NSDictionary *) options resolver:(RCTPromiseResol
     if (ms)
     {
         ms.delegate = self;
+
+        MobileRTCMeetingJoinParam * joinParam = [[MobileRTCMeetingJoinParam alloc] init];
+        joinParam.userName = options[@"userName"];
+        joinParam.meetingNumber = options[@"meetingNumber"];
+        joinParam.password = options[@"pwd"];
+        joinParam.vanityID = options[@"participantId"];
+
+
         //For Join a meeting with password
-        NSDictionary *paramDict = @{
-                                    kMeetingParam_Username: options[@"userName"],
-                                    kMeetingParam_MeetingNumber: options[@"meetingNumber"],
-                                    kMeetingParam_MeetingPassword: options[@"pwd"],
-                                    kMeetingParam_ParticipantID: options[@"participantId"],
-                                    };
-        MobileRTCMeetError ret = [ms joinMeetingWithDictionary:paramDict];
+//        NSDictionary *paramDict = @{
+//                                    kMeetingParam_Username: options[@"userName"],
+//                                    kMeetingParam_MeetingNumber: options[@"meetingNumber"],
+//                                    kMeetingParam_MeetingPassword: options[@"pwd"],
+//                                    kMeetingParam_ParticipantID: options[@"participantId"],
+//                                    };
+        MobileRTCMeetError ret = [ms joinMeetingWithJoinParam:joinParam];
         NSLog(@"onJoinaMeeting ret:%d", ret);
     }
     _meetingResolver = resolve;
