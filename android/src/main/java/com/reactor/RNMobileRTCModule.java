@@ -31,6 +31,7 @@ import us.zoom.sdk.ZoomError;
 import us.zoom.sdk.ZoomSDK;
 import us.zoom.sdk.ZoomSDKInitializeListener;
 import us.zoom.sdk.JoinMeetingParams;
+import us.zoom.sdk.ZoomSDKInitParams;
 
 import java.util.Map;
 
@@ -71,7 +72,11 @@ public class RNMobileRTCModule extends ReactContextBaseJavaModule implements Mee
 		mPromise = promise;
 
 		if (!zoomSDK.isInitialized()) {
-			zoomSDK.initialize(this.getCurrentActivity(), sdkKey, sdkSecret, sdkDomain, this);
+			ZoomSDKInitParams initParams = new ZoomSDKInitParams();
+            initParams.appKey = sdkKey;
+            initParams.appSecret = sdkSecret;
+            initParams.domain = sdkDomain;
+            zoomSDK.initialize(this.getCurrentActivity(), this, initParams);
 		} else {
 			startMeetingService();
 			promise.resolve("Success!");
